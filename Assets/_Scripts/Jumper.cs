@@ -8,6 +8,8 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class Jumper : MonoBehaviour
 {
+    private PlayerInput _playerInput;
+
     private Rigidbody2D _rigidbody;
 
 
@@ -17,6 +19,8 @@ public class Jumper : MonoBehaviour
     public float MaxTimePressButton = 0.5f;
 
     private GroundChecker _groundChecker;
+    private RoofChecker _roofChecker;
+
 
     float DistanceToGround => _groundChecker.DistanceToGround();
 
@@ -27,11 +31,18 @@ public class Jumper : MonoBehaviour
 
     private void OnEnable()
     {
+        PlayerInput.WantToJump += OnJumpStarted;
+        PlayerInput.SpaceReleased += OnJumpFinished;
         GroundChecker.OnLanding += OnLanding;
+        GravityInverterArea.InvertGravity += InvertGravity;
+
     }
     private void OnDisable()
     {
+        PlayerInput.WantToJump -= OnJumpStarted;
+        PlayerInput.SpaceReleased -= OnJumpFinished;
         GroundChecker.OnLanding -= OnLanding;
+        GravityInverterArea.InvertGravity -= InvertGravity;
     }
 
 
@@ -53,6 +64,8 @@ public class Jumper : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _groundChecker = GetComponent<GroundChecker>();
+        _roofChecker = GetComponent<RoofChecker>();
+        _playerInput = GetComponent<PlayerInput>();
     }
 
     // Update is called once per frame
@@ -66,7 +79,7 @@ public class Jumper : MonoBehaviour
 
     void OnJump()
     {
-        if (_groundChecker.IsGrounded)
+        if (_groundChecker.IsGrounded || _roofChecker.IsGrounded)
             Jump();
     }
 
@@ -108,13 +121,27 @@ public class Jumper : MonoBehaviour
         _rigidbody.gravityScale *= 1 / f;
     }
 
-    bool OnZenit()
+    public bool OnZenit()
     {
-        return (_lastVelocityY > 0 && _rigidbody.velocity.y <= 0f); //4.0000 = 4.000000000000001; f1==f2 abs(f1-f2) < epsilon
+        if(_rigidbody.gravityScale >= 0)
+        {
+            return (_lastVelocityY > 0 && _rigidbody.velocity.y <= 0f); //4.0000 = 4.000000000000001; f1==f2 abs(f1-f2) < epsilon
+        }
+        else
+        {
+            return (_lastVelocityY < 0 && _rigidbody.velocity.y >= 0f); //4.0000 = 4.000000000000001; f1==f2 abs(f1-f2) < epsilon
+        }
+        
     }
 
     private void OnLanding()
     {
         _rigidbody.gravityScale = 1;
+    }
+
+    private void InvertGravity()
+    {
+        _rigidbody.gravityScale *= -1;
+        JumpHeight *= -1;
     }
 }

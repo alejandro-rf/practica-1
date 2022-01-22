@@ -244,6 +244,9 @@ GameObject:
   - component: {fileID: 155923680}
   - component: {fileID: 155923687}
   - component: {fileID: 155923686}
+  - component: {fileID: 155923688}
+  - component: {fileID: 155923683}
+  - component: {fileID: 155923682}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -288,6 +291,37 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.23
+--- !u!114 &155923682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155923679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bda9ade2ead91cb49930504389612c30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GroundCheckPoint: {fileID: 254180828}
+  WhatIsGround:
+    serializedVersion: 2
+    m_Bits: 512
+--- !u!114 &155923683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155923679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87fee1f9ef9f4f2498c426ef18202d22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  JumpHeight: 3
+  TimeToPeak: 1
+  MaxTimePressButton: 0.5
 --- !u!212 &155923684
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -379,6 +413,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 932851acf8671984a9b0a4c2aebf7e23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &155923688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155923679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58e3b6da319c0ac4a96f9b631db312f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GroundCheckPoint: {fileID: 1918508236}
+  WhatIsGround:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1 &227829529
 GameObject:
   m_ObjectHideFlags: 0
@@ -2303,6 +2353,7 @@ GameObject:
   - component: {fileID: 2138762733}
   - component: {fileID: 2138762732}
   - component: {fileID: 2138762731}
+  - component: {fileID: 2138762730}
   m_Layer: 0
   m_Name: GravityInverterArea
   m_TagString: Untagged
@@ -2310,6 +2361,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &2138762730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2138762729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a63b918a00b460c4a9a616d4fbb2aa8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!61 &2138762731
 BoxCollider2D:
   m_ObjectHideFlags: 0
