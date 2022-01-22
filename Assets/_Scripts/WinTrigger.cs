@@ -7,6 +7,7 @@ public class WinTrigger : MonoBehaviour
 {
     [SerializeField]
     private GameObject WinObject;
+    public static Action OnGameStateChanged;
 
     // Start is called before the first frame update
     void Start()
@@ -22,11 +23,13 @@ public class WinTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+
         var player = other.GetComponent<PlayerMovement>();
         if (player)
         {
-            ShowWin();
-            Destroy(gameObject);
+            OnGameStateChanged?.Invoke();
+            //ShowWin();
+            //Destroy(gameObject);
         }
     }
 
