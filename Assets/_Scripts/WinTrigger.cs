@@ -28,8 +28,6 @@ public class WinTrigger : MonoBehaviour
         if (player)
         {
             OnGameStateChanged?.Invoke();
-            //ShowWin();
-            //Destroy(gameObject);
         }
     }
 

@@ -6,8 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    [SerializeField]  private GameObject textObject;
-    [SerializeField] private GameObject winObject;
+    [SerializeField] private GameObject textObject, winObject;
     
 
     private void Awake()
