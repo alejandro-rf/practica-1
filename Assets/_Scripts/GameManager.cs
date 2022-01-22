@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     [SerializeField]  private GameObject textObject;
+    [SerializeField] private GameObject winObject;
     
 
     private void Awake()
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
     private void PlayerWins()
     {
         textObject.SetActive(true);
+        Destroy(winObject);
     }
 
     private void OnEnable()
