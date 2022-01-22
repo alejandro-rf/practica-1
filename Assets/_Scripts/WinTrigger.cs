@@ -23,8 +23,6 @@ public class WinTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Hola");
-
         var player = other.GetComponent<PlayerMovement>();
         if (player)
         {
