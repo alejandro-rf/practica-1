@@ -20,7 +20,7 @@ public class Jumper : MonoBehaviour
 
     private GroundChecker _groundChecker;
     private RoofChecker _roofChecker;
-
+    private WallChecker _wallChecker;
 
     float DistanceToGround => _groundChecker.DistanceToGround();
 
@@ -34,7 +34,9 @@ public class Jumper : MonoBehaviour
         PlayerInput.WantToJump += OnJumpStarted;
         PlayerInput.SpaceReleased += OnJumpFinished;
         GroundChecker.OnLanding += OnLanding;
+        RoofChecker.OnLanding += OnRoofing;
         GravityInverterArea.InvertGravity += InvertGravity;
+        HighJump.OnJumpBoost += JumpBoost;
 
     }
     private void OnDisable()
@@ -42,7 +44,9 @@ public class Jumper : MonoBehaviour
         PlayerInput.WantToJump -= OnJumpStarted;
         PlayerInput.SpaceReleased -= OnJumpFinished;
         GroundChecker.OnLanding -= OnLanding;
+        RoofChecker.OnLanding -= OnRoofing;
         GravityInverterArea.InvertGravity -= InvertGravity;
+        HighJump.OnJumpBoost -= JumpBoost;
     }
 
 
@@ -65,6 +69,7 @@ public class Jumper : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
         _groundChecker = GetComponent<GroundChecker>();
         _roofChecker = GetComponent<RoofChecker>();
+        _wallChecker = GetComponent<WallChecker>();
         _playerInput = GetComponent<PlayerInput>();
     }
 
@@ -72,15 +77,19 @@ public class Jumper : MonoBehaviour
     void FixedUpdate()
     {
         if (OnZenit())
+        {
             TweakGravity();
+        }
 
         _lastVelocityY = _rigidbody.velocity.y;
     }
 
     void OnJump()
     {
-        if (_groundChecker.IsGrounded || _roofChecker.IsGrounded)
+        if (_groundChecker.IsGrounded || _roofChecker.IsGrounded || _wallChecker.IsGrounded)
+        {
             Jump();
+        }  
     }
 
     void OnJumpStarted()
@@ -139,9 +148,23 @@ public class Jumper : MonoBehaviour
         _rigidbody.gravityScale = 1;
     }
 
+    private void OnRoofing()
+    {
+        _rigidbody.gravityScale = -1;
+    }
+
     private void InvertGravity()
     {
         _rigidbody.gravityScale *= -1;
         JumpHeight *= -1;
     }
+
+
+    //POWER UP
+
+    private void JumpBoost()
+    {
+        JumpHeight *= 2;
+    }
+
 }
