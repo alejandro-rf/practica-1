@@ -7,25 +7,22 @@ public class GravityInverterArea : MonoBehaviour
 {
     public static Action InvertGravity;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    private void OnTriggerStay2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
 
         var jump = other.GetComponent<Jumper>();
-        if (jump.OnZenit())
+        if (jump)
         {
-            InvertGravity?.Invoke();
+            jump.IsInGravityArea = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        var jump = other.GetComponent<Jumper>();
+        if (jump)
+        {
+            jump.IsInGravityArea = false;
         }
     }
 }

@@ -19,6 +19,9 @@ public class Jumper : MonoBehaviour
     private int jumpCount = 0;
     private int extraJumps = 2;
 
+    //Gravity Area
+    public bool IsInGravityArea { get; set; }
+
     public float MaxTimePressButton = 0.5f;
 
     private GroundChecker _groundChecker;
@@ -39,7 +42,6 @@ public class Jumper : MonoBehaviour
         GroundChecker.OnLanding += OnLanding;
         RoofChecker.OnLanding += OnRoofing;
         WallChecker.OnLanding += OnWalling;
-        GravityInverterArea.InvertGravity += InvertGravity;
         HighJump.OnJumpBoost += JumpBoost;
 
     }
@@ -50,7 +52,6 @@ public class Jumper : MonoBehaviour
         GroundChecker.OnLanding -= OnLanding;
         RoofChecker.OnLanding -= OnRoofing;
         WallChecker.OnLanding -= OnWalling;
-        GravityInverterArea.InvertGravity -= InvertGravity;
         HighJump.OnJumpBoost -= JumpBoost;
     }
 
@@ -83,6 +84,11 @@ public class Jumper : MonoBehaviour
     {
         if (OnZenit())
         {
+            if (IsInGravityArea)
+            {
+                InvertGravity();
+                IsInGravityArea = false;
+            }
             TweakGravity();
         }
 
@@ -119,7 +125,6 @@ public class Jumper : MonoBehaviour
         ApplyGravity();
         _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, GetStartSpeed());
         jumpCount++;
-        Debug.Log(jumpCount);
     }
 
     private float GetStartSpeed()
@@ -129,12 +134,23 @@ public class Jumper : MonoBehaviour
 
     void ApplyGravity()
     {
-        _rigidbody.gravityScale = -2 * JumpHeight / (TimeToPeak * TimeToPeak) / Physics2D.gravity.y;
+        if(jumpCount > 0)
+        {
+            _rigidbody.gravityScale = -2 * (JumpHeight*2) / (TimeToPeak * TimeToPeak) / Physics2D.gravity.y;
+        }
+        else
+        {
+            _rigidbody.gravityScale = GetRegularGravity();
+        } 
     }
 
+    private float GetRegularGravity()
+    {
+        return  -2 * JumpHeight / (TimeToPeak * TimeToPeak) / Physics2D.gravity.y;
+    }
     void TweakGravity()
     {
-        _rigidbody.gravityScale *= 2f;
+        _rigidbody.gravityScale = GetRegularGravity() * 2;
     }
 
     void TweakGravityLongJump(float f)
@@ -159,20 +175,18 @@ public class Jumper : MonoBehaviour
     {
         _rigidbody.gravityScale = 1;
         jumpCount = 0;
-        Debug.Log(jumpCount);
     }
 
     private void OnRoofing()
     {
         _rigidbody.gravityScale = -1;
         jumpCount = 0;
-        Debug.Log(jumpCount);
     }
 
     private void OnWalling()
     {
         jumpCount = 0;
-        Debug.Log("Landing on wall");
+        Debug.Log("LandedOnWall");
     }
 
     private void InvertGravity()

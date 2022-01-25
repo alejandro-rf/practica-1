@@ -16,11 +16,7 @@ public class WallChecker : MonoBehaviour
     private bool _wasGrounded;
 
     public static Action OnLanding;
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -32,10 +28,7 @@ public class WallChecker : MonoBehaviour
     {
         var leftOverlap = Physics2D.OverlapCircle(LeftWallCheckPoint.position, _groudCheckRadius, WhatIsGround);
         var rightOverlap = Physics2D.OverlapCircle(RightWallCheckPoint.position, _groudCheckRadius, WhatIsGround);
-        if(leftOverlap != null || rightOverlap != null)
-        {
-            _isGrounded = true;
-        }
+        _isGrounded = leftOverlap != null || rightOverlap != null;
 
         if (_isGrounded && !_wasGrounded)
         {
