@@ -15,6 +15,9 @@ public class Jumper : MonoBehaviour
 
     public float JumpHeight = 6;
     public float TimeToPeak = 1;
+    // Double jumps
+    private int jumpCount = 0;
+    private int extraJumps = 2;
 
     public float MaxTimePressButton = 0.5f;
 
@@ -35,6 +38,7 @@ public class Jumper : MonoBehaviour
         PlayerInput.SpaceReleased += OnJumpFinished;
         GroundChecker.OnLanding += OnLanding;
         RoofChecker.OnLanding += OnRoofing;
+        WallChecker.OnLanding += OnWalling;
         GravityInverterArea.InvertGravity += InvertGravity;
         HighJump.OnJumpBoost += JumpBoost;
 
@@ -45,6 +49,7 @@ public class Jumper : MonoBehaviour
         PlayerInput.SpaceReleased -= OnJumpFinished;
         GroundChecker.OnLanding -= OnLanding;
         RoofChecker.OnLanding -= OnRoofing;
+        WallChecker.OnLanding -= OnWalling;
         GravityInverterArea.InvertGravity -= InvertGravity;
         HighJump.OnJumpBoost -= JumpBoost;
     }
@@ -86,10 +91,15 @@ public class Jumper : MonoBehaviour
 
     void OnJump()
     {
-        if (_groundChecker.IsGrounded || _roofChecker.IsGrounded || _wallChecker.IsGrounded)
+        if (_groundChecker.IsGrounded
+            || _roofChecker.IsGrounded
+            || _wallChecker.IsGrounded
+            || !_groundChecker.IsGrounded && jumpCount < extraJumps
+            || !_roofChecker.IsGrounded && jumpCount < extraJumps
+            || !_wallChecker.IsGrounded && jumpCount < extraJumps)
         {
             Jump();
-        }  
+        }
     }
 
     void OnJumpStarted()
@@ -108,6 +118,8 @@ public class Jumper : MonoBehaviour
     {
         ApplyGravity();
         _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, GetStartSpeed());
+        jumpCount++;
+        Debug.Log(jumpCount);
     }
 
     private float GetStartSpeed()
@@ -132,7 +144,7 @@ public class Jumper : MonoBehaviour
 
     public bool OnZenit()
     {
-        if(_rigidbody.gravityScale >= 0)
+        if (_rigidbody.gravityScale >= 0)
         {
             return (_lastVelocityY > 0 && _rigidbody.velocity.y <= 0f); //4.0000 = 4.000000000000001; f1==f2 abs(f1-f2) < epsilon
         }
@@ -140,17 +152,27 @@ public class Jumper : MonoBehaviour
         {
             return (_lastVelocityY < 0 && _rigidbody.velocity.y >= 0f); //4.0000 = 4.000000000000001; f1==f2 abs(f1-f2) < epsilon
         }
-        
+
     }
 
     private void OnLanding()
     {
         _rigidbody.gravityScale = 1;
+        jumpCount = 0;
+        Debug.Log(jumpCount);
     }
 
     private void OnRoofing()
     {
         _rigidbody.gravityScale = -1;
+        jumpCount = 0;
+        Debug.Log(jumpCount);
+    }
+
+    private void OnWalling()
+    {
+        jumpCount = 0;
+        Debug.Log("Landing on wall");
     }
 
     private void InvertGravity()
